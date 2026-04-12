@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          cat > /usr/share/nginx/html/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Task 4 - Kubernetes with KIND</title>
+          </head>
+          <body>
+            <main>
+              <p>Kubernetes + KIND</p>
+              <h1>Task 4 Deployment Successful</h1>
+              <p>This page is served by an Nginx pod running inside a local KIND cluster.</p>
+            </main>
+          </body>
+          </html>
+          EOF
+          nginx -g 'daemon off;'
+        ports:
+        - containerPort: 80
